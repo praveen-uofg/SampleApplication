@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <ImageView
+        android:layout_width="115dp"
+        android:layout_height="45dp"
+        android:id="@+id/logo"
+        android:layout_marginTop="12dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/border"
+        android:src="@drawable/temp_img"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spill Restaurant nsjcoskcpskdpsldpslp"
+        android:id="@+id/restaurant_name"
+        android:layout_toRightOf="@+id/logo"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="23dp"
+        android:textSize="15dp"
+        android:textColor="@android:color/background_dark"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/offers"
+        android:layout_below="@+id/restaurant_name"
+        android:layout_marginTop="1dp"
+        android:layout_alignStart="@+id/restaurant_name"
+        android:textColor="@android:color/tab_indicator_text"
+        android:textSize="13dp"/>
+
+    <com.example.praveen.sampleapplication.HorizontalListView.HorizontalListView
+        android:id="@+id/hlvCustomList"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_below="@+id/logo"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+
+        android:visibility="visible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location_image"
+        android:layout_below="@+id/hlvCustomList"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/location_icon_blue"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="250M"
+        android:id="@+id/distance"
+        android:layout_alignBottom="@+id/location_image"
+        android:layout_toEndOf="@+id/location_image"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="13dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/tab_indicator_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Andheri West"
+        android:id="@+id/address_text"
+        android:layout_alignTop="@+id/distance"
+        android:layout_toEndOf="@+id/distance"
+        android:layout_marginStart="10dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/tab_indicator_text"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="9dp"
+        android:layout_alignRight="@id/restaurant_name"
+        android:button="@drawable/checkbox"
+        android:layout_marginTop="13dp"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/location_image"
+        android:layout_alignEnd="@+id/checkBox" />
+
+
+</RelativeLayout>
