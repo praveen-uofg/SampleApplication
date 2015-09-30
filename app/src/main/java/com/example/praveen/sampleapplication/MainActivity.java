@@ -201,6 +201,7 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
                     e.printStackTrace();
                 }*/
                 CurrentLocationAsyncTask currentLocationAsyncTask = new CurrentLocationAsyncTask(this,mCurrentLat,mCurrentLon);
+                currentLocationAsyncTask.jsonResult = this;
                 currentLocationAsyncTask.execute();
             }
         }
