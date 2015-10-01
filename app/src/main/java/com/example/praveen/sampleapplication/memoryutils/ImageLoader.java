@@ -65,14 +65,13 @@ public class ImageLoader {
 
 	private Bitmap getBitmap(String url) {
 		File f = fileCache.getFile(url);
-
 		Bitmap b = decodeFile(f);
 		if (b != null)
 			return b;
 
 		// Download Images from the Internet
 		try {
-			Bitmap bitmap = null;
+			Bitmap bitmap;
 			URL imageUrl = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) imageUrl
 					.openConnection();
@@ -107,7 +106,7 @@ public class ImageLoader {
 
 			// Find the correct scale value. It should be the power of 2.
 			// Recommended Size 512
-			final int REQUIRED_SIZE = 50;
+			final int REQUIRED_SIZE = 70;
 			int width_tmp = o.outWidth, height_tmp = o.outHeight;
 			int scale = 1;
 			while (true) {
@@ -127,6 +126,7 @@ public class ImageLoader {
 			stream2.close();
 			return bitmap;
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.praveen.sampleapplication.Utils.ListViewItemComparator;
 import com.example.praveen.sampleapplication.interfaceutils.JsonResultSetInterface;
@@ -33,6 +35,7 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
     private String mLocationProvider = null;
 
     private DownloadJSON downloadJSON = null;
+    private CurrentLocationAsyncTask currentLocationAsyncTask = null;
     private LocationManager mLocationManager = null;
     private ArrayList arrayList = null;
     private AlertDialog alertDialog = null;
@@ -88,6 +91,10 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
             downloadJSON.cancel(true);
             downloadJSON = null;
         }
+        if (currentLocationAsyncTask != null) {
+            currentLocationAsyncTask.cancel(true);
+            currentLocationAsyncTask = null;
+        }
     }
 
     @Override
@@ -113,7 +120,7 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
             arrayList = arrayLists;
             setAdapter();
         } else {
-            showSettingsAlert("Details", "Unable to Fetch Results, Please Try later", null);
+            Toast.makeText(this,"Internet unavailable",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -154,17 +161,13 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
 
     private String initializeLocationManager() {
         mLocationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-        /*}  else if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES,
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
             return  LocationManager.NETWORK_PROVIDER;
-        } else {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            showSettingsAlert("GPS settings","GPS is not enabled. Do you want to go to settings menu?",intent);
-        }*/
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
         return LocationManager.GPS_PROVIDER;
     }
 
@@ -176,31 +179,7 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
                 mCurrentLon = mLocation.getLongitude();
                 Log.v(MainActivity.class.getName(), "updateLocation()");
 
-       /*         List<Address> addresses;
-                try {
-                    Geocoder mGC = new Geocoder(this, Locale.ENGLISH);
-                    addresses = mGC.getFromLocation(mLocation.getLatitude(),
-                            mLocation.getLongitude(), 1);
-                    Log.v(MainActivity.class.getName(), "updateLocation() list addresses = "+addresses);
-                    if (addresses != null) {
-                        Address currentAddr = addresses.get(0);
-                        if (currentAddr.getSubLocality() != null) {
-                            Log.v(MainActivity.class.getName(), "updateLocation() setTextView = "+currentAddr.getSubLocality());
-                            textView.setText(currentAddr.getSubLocality());
-                        } else if (null != currentAddr.getLocality()) {
-                            Log.v(MainActivity.class.getName(), "updateLocation() setTextView = "+currentAddr.getLocality());
-                            textView.setText(currentAddr.getLocality());
-                        } else {
-                            Log.v(MainActivity.class.getName(), "updateLocation() setTextView = "+currentAddr.getAdminArea());
-                            textView.setText(currentAddr.getAdminArea());
-                        }
-                        Log.v(MainActivity.class.getName(), "updateLocation() TextView = "+textView.getText());
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                CurrentLocationAsyncTask currentLocationAsyncTask = new CurrentLocationAsyncTask(this,mCurrentLat,mCurrentLon);
+                currentLocationAsyncTask = new CurrentLocationAsyncTask(this,mCurrentLat,mCurrentLon);
                 currentLocationAsyncTask.jsonResult = this;
                 currentLocationAsyncTask.execute();
             }
@@ -216,6 +195,17 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
+        switch(status) {
+            case LocationProvider.TEMPORARILY_UNAVAILABLE :
+            case LocationProvider.OUT_OF_SERVICE:
+                Toast.makeText(this,"Location temporary unavailable",Toast.LENGTH_LONG).show();
+                break;
+            case LocationProvider.AVAILABLE:
+                mLocationProvider = provider;
+                Toast.makeText(this,"Location available.Please Reload",Toast.LENGTH_LONG).show();
+                break;
+        }
+
     }
 
     @Override
@@ -230,7 +220,7 @@ public class MainActivity extends Activity implements JsonResultSetInterface,Loc
     @Override
     public void onProviderDisabled(String provider) {
         Log.v(MainActivity.class.getName(), "onProviderDisabled("+provider+")");
-        mLocationProvider = null;
+        mLocationProvider = provider;
         if (alertDialog != null && !alertDialog.isShowing()) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             showSettingsAlert("GPS settings", "GPS is not enabled. Please Enable GPS for Better Support", intent);

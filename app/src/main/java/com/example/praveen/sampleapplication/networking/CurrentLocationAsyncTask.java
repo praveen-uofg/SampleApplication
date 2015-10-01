@@ -31,7 +31,7 @@ public class CurrentLocationAsyncTask extends AsyncTask<Void,Void,String> {
     @Override
     protected String doInBackground(Void... params) {
         List<Address> addresses;
-        String result = "Can't get Current Location.";;
+        String result = "Can't get Current Location.";
         try {
             Geocoder mGC = new Geocoder(mContext, Locale.ENGLISH);
             addresses = mGC.getFromLocation(current_lat,

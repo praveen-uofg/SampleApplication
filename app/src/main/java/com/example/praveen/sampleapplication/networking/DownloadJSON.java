@@ -22,7 +22,7 @@ import java.util.List;
 public class DownloadJSON extends AsyncTask<String,Void,ArrayList> {
 
 
-    public JsonResultSetInterface jsonResult = null;
+    public JsonResultSetInterface jsonResult;
     ProgressDialog mProgressDialog;
     private Context mContext = null;
     private ArrayList<ListViewItems> arrayList = null;
@@ -47,6 +47,7 @@ public class DownloadJSON extends AsyncTask<String,Void,ArrayList> {
         current_lat = lat;
         current_lon = lon;
         arrayList = new ArrayList<ListViewItems>();
+        jsonResult = null;
     }
 
     @Override

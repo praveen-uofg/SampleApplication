@@ -31,13 +31,11 @@ public class HorizontalListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        Log.v(HorizontalListAdapter.class.getName(), "catlist size =  = " +catList.size());
         return catList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        Log.v(HorizontalListAdapter.class.getName(), "catlist item   = " +catList.get(position));
         return catList.get(position);
     }
 
@@ -49,9 +47,6 @@ public class HorizontalListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-
-        Log.v(HorizontalListAdapter.class.getName(),"getView ( position = "+position+" convert view = "+convertView+ " parent = "+parent);
-
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.horizontallistview, parent, false);

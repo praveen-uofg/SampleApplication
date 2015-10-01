@@ -37,6 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
@@ -303,7 +304,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
             Bundle bundle = (Bundle) state;
 
             // Restore our state from the bundle
-            mRestoreX = Integer.valueOf((bundle.getInt(BUNDLE_ID_CURRENT_X)));
+            mRestoreX = (bundle.getInt(BUNDLE_ID_CURRENT_X));
 
             // Restore out parent's state from the bundle
             super.onRestoreInstanceState(bundle.getParcelable(BUNDLE_ID_PARENT_STATE));
@@ -411,7 +412,9 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
             mAdapter.registerDataSetObserver(mAdapterDataObserver);
         }
 
-        initializeRecycledViewCache(mAdapter.getViewTypeCount());
+        if (mAdapter != null) {
+            initializeRecycledViewCache(mAdapter.getViewTypeCount());
+        }
         reset();
     }
 
@@ -862,13 +865,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         return getWidth() - getPaddingLeft() - getPaddingRight();
     }
 
-    /** Scroll to the provided offset */
-    public void scrollTo(int x) {
-        mFlingTracker.startScroll(mNextX, 0, x - mNextX, 0);
-        setCurrentScrollState(OnScrollStateChangedListener.ScrollState.SCROLL_STATE_FLING);
-        requestLayout();
-    }
-
     @Override
     public int getFirstVisiblePosition() {
         return mLeftViewAdapterIndex;
@@ -1104,7 +1100,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         // Detect when the user lifts their finger off the screen after a touch
         if (event.getAction() == MotionEvent.ACTION_UP) {
             // If not flinging then we are idle now. The user just finished a finger scroll.
@@ -1136,27 +1132,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         if (mEdgeGlowRight != null) {
             mEdgeGlowRight.onRelease();
         }
-    }
-
-    /**
-     * Sets a listener to be called when the HorizontalListView has been scrolled to a point where it is
-     * running low on data. An example use case is wanting to auto download more data when the user
-     * has scrolled to the point where only 10 items are left to be rendered off the right of the
-     * screen. To get called back at that point just register with this function with a
-     * numberOfItemsLeftConsideredLow value of 10. <br>
-     * <br>
-     * This will only be called once to notify that the HorizontalListView is running low on data.
-     * Calling notifyDataSetChanged on the adapter will allow this to be called again once low on data.
-     *
-     * @param listener The listener to be notified when the number of array adapters items left to
-     * be shown is running low.
-     *
-     * @param numberOfItemsLeftConsideredLow The number of array adapter items that have not yet
-     * been displayed that is considered too low.
-     */
-    public void setRunningOutOfDataListener(RunningOutOfDataListener listener, int numberOfItemsLeftConsideredLow) {
-        mRunningOutOfDataListener = listener;
-        mRunningOutOfDataThreshold = numberOfItemsLeftConsideredLow;
     }
 
     /**
@@ -1223,15 +1198,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
          * @param scrollState The current scroll state.
          */
         void onScrollStateChanged(ScrollState scrollState);
-    }
-
-    /**
-     * Sets a listener to be invoked when the scroll state has changed.
-     *
-     * @param listener The listener to be invoked.
-     */
-    public void setOnScrollStateChangedListener(OnScrollStateChangedListener listener) {
-        mOnScrollStateChangedListener = listener;
     }
 
     /**

@@ -35,11 +35,7 @@ public class JSONFunction {
             conn.connect();
 
             inputStream = conn.getInputStream();
-            Log.v(JSONFunction.class.getName(), "inputstream = " + inputStream);
-
             result = convertToString(inputStream);
-            Log.v(JSONFunction.class.getName(), "result  = " + result);
-
             jsonObject = new JSONObject(result);
             conn.disconnect();
         } catch (JSONException | IOException e) {
